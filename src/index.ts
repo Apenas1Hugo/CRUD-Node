@@ -56,6 +56,16 @@ app.put("/users/:id", (req, res) => {
   res.json(user);
 });
 
+// rota para deletar usuario
+app.delete("/users/:id", (req, res) => {
+  const index = users.findIndex((u) => u.id === Number(req.params.id));
+  if (index === -1) {
+    return res.status(404).json({ message: "usuario não encontrado" });
+  }
+  users.splice(index, 1);
+  res.status(204).send();
+});
+
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000");
 });
