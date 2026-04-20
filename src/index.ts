@@ -13,7 +13,6 @@ app.get("/users", (req, res) => {
   res.json(users);
 });
 
-
 // Rota para obter um usuário por ID
 app.get("/users/:id", (req, res) => {
   const id = Number(req.params.id);
@@ -21,7 +20,7 @@ app.get("/users/:id", (req, res) => {
   if (isNaN(id)) {
     return res.status(400).json({ message: "ID inválido" });
   }
-  
+
   const user = users.find((u) => u.id === id);
   if (user) {
     res.json(user);
@@ -32,14 +31,29 @@ app.get("/users/:id", (req, res) => {
 
 // Rota para criar um novo usuário
 app.post("/users", (req, res) => {
-    const { name, email } = req.body;
-    const newUser = {
-        id: users.length + 1,
-        name,
-        email
-    };
-    users.push(newUser);
-    res.status(201).json(newUser);
+  const { name, email } = req.body;
+  const newUser = {
+    id: users.length + 1,
+    name,
+    email,
+  };
+  users.push(newUser);
+  res.status(201).json(newUser);
+});
+
+// rota para alterar informaçoes do usuario
+app.put("/users/:id", (req, res) => {
+  const user = users.find((u) => u.id === Number(req.params.id));
+
+  if (!user) {
+    return res.status(404).json({ message: "Usuário não encontrado" });
+  }
+
+  const { name, email } = req.body;
+  user.name = name ?? user.name;
+  user.email = email ?? user?.email;
+
+  res.json(user);
 });
 
 app.listen(3000, () => {
