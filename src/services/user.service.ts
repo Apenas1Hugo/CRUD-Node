@@ -1,14 +1,21 @@
+import prisma from "../database/prisma";
 class UserService {
-  createUser({ name, email }: { name: string; email: string }) {
+  async createUser({ name, email }: { name: string; email: string }) {
     if (!email.includes("@")) {
       throw new Error("Email inválido");
     }
 
-    return {
-      id: Date.now(),
-      name,
-      email
-    };
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+      },
+    });
+
+    return user;
+  }
+  async getAllUsers() {
+    return await prisma.user.findMany();
   }
 }
 
