@@ -1,7 +1,10 @@
+//imports
 import { Request, Response } from "express";
 import userService from "../services/user.service";
 
+//Classe de controle do usuario
 class UserController {
+  //função que chama a criação do usuario
   async create(req: Request, res: Response) {
     try {
       const user = await userService.createUser(req.body);
@@ -15,6 +18,7 @@ class UserController {
       return res.status(500).json({ error: "Erro interno do servidor" });
     }
   }
+  //Função que chama o serviço de selecionar todos os usuarios
   async getAll(req: Request, res: Response) {
     try {
       const users = await userService.getAllUsers();
@@ -24,5 +28,5 @@ class UserController {
     }
   }
 }
-
+//exporta
 export default new UserController();

@@ -1,5 +1,7 @@
+//imports
 import { Request, Response, NextFunction } from "express";
 
+//Validação se campo email existe e possui @
 export const validateemail = (
   req: Request,
   res: Response,
