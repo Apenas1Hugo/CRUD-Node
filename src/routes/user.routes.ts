@@ -14,5 +14,7 @@ router.get("/users", userController.getAll);
 router.get("/users/:id", userController.getUserById);
 //rota para update
 router.put("/users/:id", validateemail, userController.update);
+//rota para delete
+router.delete("/users/:id", userController.deleteUser);
 //exporta
 export default router;

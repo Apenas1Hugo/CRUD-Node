@@ -41,6 +41,10 @@ class UserService {
       },
     });
   }
+  //Função para deletar usuario
+  async userDelete(id: number) {
+    return await prisma.user.delete({ where: { id } });
+  }
 }
 
 export default new UserService();

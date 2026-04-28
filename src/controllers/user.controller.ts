@@ -61,6 +61,26 @@ class UserController {
       return res.status(500).json({ error: "Erro ao atualizar usuário" });
     }
   }
+  //Função que chama o Delete
+  async deleteUser(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+
+      if (isNaN(id)) {
+        return res.status(400).json({ error: "ID inválido" });
+      }
+
+      await userService.userDelete(id);
+
+      return res.status(204).send();
+    } catch (error: any) {
+      if (error.code === "P2025") {
+        return res.status(404).json({ error: "Usuário não encontrado" });
+      }
+
+      return res.status(500).json({ error: "Erro ao deletar usuário" });
+    }
+  }
 }
 //exporta
 export default new UserController();
