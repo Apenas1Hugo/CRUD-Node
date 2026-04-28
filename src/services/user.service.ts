@@ -22,6 +22,25 @@ class UserService {
   async getAllUsers() {
     return await prisma.user.findMany();
   }
+  //Função para selecionar por ID
+  async getUserById(id: number) {
+    return await prisma.user.findUnique({
+      where: { id },
+    });
+  }
+  //Função para Atualizar usuario
+  async updateUser(
+    id: number,
+    { name, email }: { name: string; email: string },
+  ) {
+    return await prisma.user.update({
+      where: { id },
+      data: {
+        name,
+        email,
+      },
+    });
+  }
 }
 
 export default new UserService();

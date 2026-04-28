@@ -27,6 +27,40 @@ class UserController {
       return res.status(500).json({ error: "Erro ao buscar usuários" });
     }
   }
+  //Função que chama a seleção por id
+  async getUserById(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+
+      const user = await userService.getUserById(id);
+
+      if (!user) {
+        return res.status(404).json({ error: "Usuário não encontrado" });
+      }
+
+      return res.json(user);
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao buscar usuário" });
+    }
+  }
+  //Função que chama o Update
+  async update(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+
+      if (isNaN(id)) {
+        return res.status(400).json({ error: "ID inválido" });
+      }
+
+      const { name, email } = req.body;
+
+      const user = await userService.updateUser(id, { name, email });
+
+      return res.json(user);
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao atualizar usuário" });
+    }
+  }
 }
 //exporta
 export default new UserController();
