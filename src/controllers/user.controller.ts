@@ -48,10 +48,6 @@ class UserController {
     try {
       const id = Number(req.params.id);
 
-      if (isNaN(id)) {
-        return res.status(400).json({ error: "ID inválido" });
-      }
-
       const { name, email } = req.body;
 
       const user = await userService.updateUser(id, { name, email });
@@ -65,10 +61,6 @@ class UserController {
   async deleteUser(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
-
-      if (isNaN(id)) {
-        return res.status(400).json({ error: "ID inválido" });
-      }
 
       await userService.userDelete(id);
 

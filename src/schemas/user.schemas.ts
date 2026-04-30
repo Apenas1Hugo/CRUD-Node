@@ -10,3 +10,10 @@ export const updateUserSchema = z.object({
 }).refine(data => data.name || data.email, {
   message: "Informe ao menos um campo para atualizar"
 });
+
+export const userIdSchema = z.object({
+  id: z
+    .string()
+    .regex(/^\d+$/, "ID deve ser numérico")
+    .transform(Number)
+});
