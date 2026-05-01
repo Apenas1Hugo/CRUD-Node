@@ -1,6 +1,7 @@
 //imports
 import { Request, Response } from "express";
 import userService from "../services/user.service";
+import { AppError } from "../errors/AppError";
 
 //Classe de controle do usuario
 class UserController {
@@ -21,7 +22,7 @@ class UserController {
 
     const user = await userService.getUserById(id);
     if (!user) {
-      throw { code: "NOT_FOUND" };
+        throw new AppError("Usuário não encontrado", 404);
     }
     return res.json(user);
   }

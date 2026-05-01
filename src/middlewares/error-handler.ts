@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Prisma } from "@prisma/client";
+import { ZodError } from "zod";
+import { AppError } from "../errors/AppError";
 
 export const errorHandler = (
   error: any,
@@ -7,6 +9,12 @@ export const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
+  //App error
+  if (error instanceof AppError) {
+    return res.status(error.statusCode).json({
+      error: error.message,
+    });
+  }
   //  Prisma: registro não encontrado
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     if (error.code === "P2025") {
@@ -28,12 +36,11 @@ export const errorHandler = (
     });
   }
   // Zod
-  if (error.name === "ZodError") {
+  if (error instanceof ZodError) {
     return res.status(400).json({
-      error: error.errors,
+      error: error.issues
     });
   }
-
   // erro genérico
   return res.status(500).json({
     error: "Erro interno do servidor",
