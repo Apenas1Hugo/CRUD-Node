@@ -28,6 +28,12 @@ class UserService {
       where: { id },
     });
   }
+  //Função buscar por email
+  async getUserByEmail(email: string) {
+    return await prisma.user.findUnique({
+      where: { email },
+    });
+  }
   //Função para Atualizar usuario
   async updateUser(
     id: number,

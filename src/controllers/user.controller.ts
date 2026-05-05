@@ -1,4 +1,5 @@
 //imports
+import jwt, { SignOptions } from "jsonwebtoken";
 import { Request, Response } from "express";
 import userService from "../services/user.service";
 import { AppError } from "../errors/AppError";
@@ -22,7 +23,7 @@ class UserController {
 
     const user = await userService.getUserById(id);
     if (!user) {
-        throw new AppError("Usuário não encontrado", 404);
+      throw new AppError("Usuário não encontrado", 404);
     }
     return res.json(user);
   }
@@ -43,6 +44,26 @@ class UserController {
     await userService.userDelete(id);
 
     return res.status(204).send();
+  }
+  //Função de login
+  async login(req: Request, res: Response) {
+    const { email } = req.body;
+
+    const user = await userService.getUserByEmail(email);
+
+    if (!user) {
+      throw new AppError("Credenciais inválidas", 401);
+    }
+
+    const secret = process.env.JWT_SECRET as string;
+    const expiresIn = process.env.JWT_EXPIRES_IN as string;
+    const options: SignOptions = {
+      expiresIn: expiresIn as any,
+    };
+
+    const token = jwt.sign({ id: user.id }, secret, options);
+
+    return res.json({ token });
   }
 }
 //exporta

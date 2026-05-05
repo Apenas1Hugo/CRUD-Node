@@ -5,6 +5,7 @@ import { validateCreateUser } from "../middlewares/validate-create-user";
 import { validateUpdateUser } from "../middlewares/validate-update-user";
 import { validateUserId } from "../middlewares/validate-user-id";
 import { asyncHandler } from "../utils/asyncHandler";
+import { authMiddleware } from "../middlewares/auth-middleware";
 //cria o Router
 const router = express.Router();
 
@@ -17,6 +18,7 @@ router.get("/users", asyncHandler(userController.getAll));
 // rota para selecionar por ID
 router.get(
   "/users/:id",
+  authMiddleware,
   validateUserId,
   asyncHandler(userController.getUserById),
 );
@@ -35,5 +37,7 @@ router.delete(
   validateUserId,
   asyncHandler(userController.deleteUser),
 );
+// rota para login
+router.post("/login", asyncHandler(userController.login));
 //exporta
 export default router;
