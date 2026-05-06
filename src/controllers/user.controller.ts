@@ -3,6 +3,7 @@ import jwt, { SignOptions } from "jsonwebtoken";
 import { Request, Response } from "express";
 import userService from "../services/user.service";
 import { AppError } from "../errors/AppError";
+import { toUserDTO } from "../DTOs/user.dto";
 
 //Classe de controle do usuario
 class UserController {
@@ -10,12 +11,12 @@ class UserController {
   async create(req: Request, res: Response) {
     const user = await userService.createUser(req.body);
 
-    return res.status(201).json(user);
+    return res.status(201).json(toUserDTO(user));
   }
   //Função que chama o serviço de selecionar todos os usuarios
   async getAll(req: Request, res: Response) {
     const users = await userService.getAllUsers();
-    return res.json(users);
+    return res.json(users.map(toUserDTO));
   }
   //Função que chama a seleção por id
   async getUserById(req: Request, res: Response) {
@@ -25,7 +26,7 @@ class UserController {
     if (!user) {
       throw new AppError("Usuário não encontrado", 404);
     }
-    return res.json(user);
+    return res.json(toUserDTO(user));
   }
   //Função que chama o Update
   async update(req: Request, res: Response) {
@@ -35,7 +36,7 @@ class UserController {
 
     const user = await userService.updateUser(id, { name, email });
 
-    return res.json(user);
+    return res.json(toUserDTO(user));
   }
   //Função que chama o Delete
   async deleteUser(req: Request, res: Response) {
@@ -52,13 +53,13 @@ class UserController {
     const user = await userService.getUserByEmail(email);
 
     if (!user) {
-      throw new AppError("Credenciais inválidas", 401); 
+      throw new AppError("Credenciais inválidas", 401);
     }
-  
+
     const secret = process.env.JWT_SECRET as string;
     const expiresIn = process.env.JWT_EXPIRES_IN as string; // Certifique-se de que essas variáveis de ambiente estão definidas
     const options: SignOptions = {
-      expiresIn: expiresIn as any, 
+      expiresIn: expiresIn as any,
     };
 
     const token = jwt.sign({ id: user.id }, secret, options); // Gera o token JWT com o ID do usuário e as opções de expiração
