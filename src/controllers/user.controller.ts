@@ -52,16 +52,16 @@ class UserController {
     const user = await userService.getUserByEmail(email);
 
     if (!user) {
-      throw new AppError("Credenciais inválidas", 401);
+      throw new AppError("Credenciais inválidas", 401); 
     }
-
+  
     const secret = process.env.JWT_SECRET as string;
-    const expiresIn = process.env.JWT_EXPIRES_IN as string;
+    const expiresIn = process.env.JWT_EXPIRES_IN as string; // Certifique-se de que essas variáveis de ambiente estão definidas
     const options: SignOptions = {
-      expiresIn: expiresIn as any,
+      expiresIn: expiresIn as any, 
     };
 
-    const token = jwt.sign({ id: user.id }, secret, options);
+    const token = jwt.sign({ id: user.id }, secret, options); // Gera o token JWT com o ID do usuário e as opções de expiração
 
     return res.json({ token });
   }

@@ -13,7 +13,7 @@ const router = express.Router();
 router.post("/users", validateCreateUser, asyncHandler(userController.create));
 
 // rota para selecionar todos usuarios
-router.get("/users", asyncHandler(userController.getAll));
+router.get("/users", authMiddleware, asyncHandler(userController.getAll));
 
 // rota para selecionar por ID
 router.get(
@@ -26,6 +26,7 @@ router.get(
 // rota para update
 router.put(
   "/users/:id",
+  authMiddleware,
   validateUserId,
   validateUpdateUser,
   asyncHandler(userController.update),
@@ -34,6 +35,7 @@ router.put(
 // rota para delete
 router.delete(
   "/users/:id",
+  authMiddleware,
   validateUserId,
   asyncHandler(userController.deleteUser),
 );
