@@ -1,18 +1,22 @@
 //imports
 import prisma from "../database/prisma";
+import bcrypt from "bcryptjs";
 
 //Classe de serviço do usuario
 class UserService {
   //cria o usuario
-  async createUser({ name, email }: { name: string; email: string }) {
+  async createUser({ name, email, password }: { name: string; email: string; password: string }) {
     if (!email.includes("@")) {
       throw new Error("Email inválido");
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
       data: {
         name,
         email,
+        password: hashedPassword,
       },
     });
 
@@ -37,13 +41,16 @@ class UserService {
   //Função para Atualizar usuario
   async updateUser(
     id: number,
-    { name, email }: { name: string; email: string },
+    { name, email, password }: { name: string; email: string; password: string },
   ) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     return await prisma.user.update({
       where: { id },
       data: {
         name,
         email,
+        password: hashedPassword,
       },
     });
   }

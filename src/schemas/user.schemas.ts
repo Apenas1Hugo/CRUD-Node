@@ -4,15 +4,17 @@ export const createUserSchema = z
   .object({
     name: z.string().min(1, "Nome é obrigatório"),
     email: z.string().email("Email inválido"),
+    password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
   })
   .strict();
 export const updateUserSchema = z
   .object({
     name: z.string().min(1).optional(),
     email: z.string().email().optional(),
+    password: z.string().min(6).optional(),
   })
   .strict()
-  .refine((data) => data.name || data.email, {
+  .refine((data) => data.name || data.email || data.password, {
     message: "Informe ao menos um campo para atualizar",
   });
 

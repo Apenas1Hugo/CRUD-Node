@@ -32,9 +32,9 @@ class UserController {
   async update(req: Request, res: Response) {
     const id = Number(req.params.id);
 
-    const { name, email } = req.body;
+    const { name, email, password } = req.body;
 
-    const user = await userService.updateUser(id, { name, email });
+    const user = await userService.updateUser(id, { name, email, password });
 
     return res.json(toUserDTO(user));
   }
