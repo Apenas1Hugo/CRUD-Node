@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import userService from "../services/user.service";
 import { AppError } from "../errors/AppError";
 import { toUserDTO } from "../DTOs/user.dto";
+import { string } from "zod";
 
 //Classe de controle do usuario
 class UserController {
@@ -48,16 +49,21 @@ class UserController {
   }
   //Função de login
   async login(req: Request, res: Response) {
-    const { email } = req.body;
+    const { email, password } = req.body;
 
     const user = await userService.getUserByEmail(email);
-
     if (!user) {
       throw new AppError("Credenciais inválidas", 401);
     }
-
+    const senhavalida = await userService.validatePassword(
+      password,
+      user.password,
+    );
+    if (!senhavalida) {
+      throw new AppError("Senha Errada", 401);
+    }
     const secret = process.env.JWT_SECRET as string;
-    const expiresIn = process.env.JWT_EXPIRES_IN as string; // Certifique-se de que essas variáveis de ambiente estão definidas
+    const expiresIn = process.env.JWT_EXPIRES_IN as string; 
     const options: SignOptions = {
       expiresIn: expiresIn as any,
     };

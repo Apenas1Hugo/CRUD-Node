@@ -58,6 +58,10 @@ class UserService {
   async userDelete(id: number) {
     return await prisma.user.delete({ where: { id } });
   }
+  //validação de senha
+  async validatePassword(password: string, hashedPassword: string) {
+    return await bcrypt.compare(password, hashedPassword);
+  }
 }
 
 export default new UserService();
